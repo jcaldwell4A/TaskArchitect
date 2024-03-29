@@ -1,0 +1,39 @@
+﻿@page "/login"
+@using TaskArchitect.Models
+@using TaskArchitect.Services
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h2>Login</h2>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <InputText id="username" @bind-Value="loginModel.Username" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="loginModel.Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private async System.Threading.Tasks.Task HandleLogin()
+    {
+        var result = await AuthService.Login(loginModel);
+        if (result.Success)
+        {
+            NavigationManager.NavigateTo("/tasks");
+        }
+        else
+        {
+            // Handle login error
+        }
+    }
+}
